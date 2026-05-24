@@ -3,8 +3,8 @@ POST http://localhost:4000/patients
 Content-Type: application/json
 
 {
-  "name": "John Dore",
-  "email": "test@gmail.com",
+  "name": "John Dore Billing",
+  "email": "billings@gmail.com",
   "address": "123 Geekie Road, Merrivale, 3291",
   "dateOfBirth": "1990-04-22",
   "registeredDate": "2026-05-18"

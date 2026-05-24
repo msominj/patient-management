@@ -4,6 +4,7 @@ import org.msominj.patientservice.dto.PatientRequestDTO;
 import org.msominj.patientservice.dto.PatientResponseDTO;
 import org.msominj.patientservice.exception.EmailAlreadyExistsException;
 import org.msominj.patientservice.exception.PatientNoFoundException;
+import org.msominj.patientservice.grpc.BillingServiceGrpcClient;
 import org.msominj.patientservice.mapper.PatientMapper;
 import org.msominj.patientservice.model.Patient;
 import org.msominj.patientservice.repository.PatientRepository;
@@ -19,8 +20,11 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository) {
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
+
+    public PatientService(PatientRepository patientRepository,  BillingServiceGrpcClient billingServiceGrpcClient) {
         this.patientRepository = patientRepository;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
     }
 
     public List<PatientResponseDTO> getPatients() {
@@ -37,6 +41,9 @@ public class PatientService {
         }
 
         Patient newPatient = patientRepository.save(PatientMapper.toModel(patientRequestDTO));
+
+        billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(),
+          newPatient.getName(), newPatient.getAddress() );
 
         return PatientMapper.toDTO(newPatient);
 
